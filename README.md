@@ -116,9 +116,3 @@ Managing gym operations manually is inefficient and error-prone. This project au
 
 ---
 
-## ✅ Status: In Progress
-
-Stay tuned for updates!
-
----
-
