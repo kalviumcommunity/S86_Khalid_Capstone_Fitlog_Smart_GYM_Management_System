@@ -1,0 +1,27 @@
+{
+  "name": "s86_khalid_capstone_fitlog_smart_gym_management_system",
+  "version": "1.0.0",
+  "description": "**Fitlog – Smart GYM Management System**",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kalviumcommunity/S86_Khalid_Capstone_Fitlog_Smart_GYM_Management_System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kalviumcommunity/S86_Khalid_Capstone_Fitlog_Smart_GYM_Management_System/issues"
+  },
+  "homepage": "https://github.com/kalviumcommunity/S86_Khalid_Capstone_Fitlog_Smart_GYM_Management_System#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.15.0"
+  }
+}
