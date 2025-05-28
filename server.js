@@ -3,15 +3,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const User = require('./models/user');
+const Post = require('./models/post');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI || 'your_mongodb_uri_here', {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -19,38 +18,27 @@ mongoose.connect(process.env.MONGO_URI || 'your_mongodb_uri_here', {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection failed:', err));
 
-// Default route
 app.get('/', (req, res) => {
   res.send('Welcome to the GET API server');
 });
 
-// POST api implimentation
 app.post('/api/users', async (req, res) => {
   try {
     const { name, email, age, city } = req.body;
-
     if (!name || !email) {
       return res.status(400).json({ message: 'Name and email are required' });
     }
-
     const newUser = new User({ name, email, age, city });
     const savedUser = await newUser.save();
-
-    res.status(201).json({
-      message: 'User created successfully',
-      user: savedUser
-    });
+    res.status(201).json({ message: 'User created successfully', user: savedUser });
   } catch (error) {
     res.status(500).json({ message: 'Failed to create user', error });
   }
 });
 
-// PUT api implimentation
-
 app.put('/api/users/:id', async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
-
   try {
     const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
     if (!updatedUser) return res.status(404).json({ message: 'User not found' });
@@ -60,8 +48,6 @@ app.put('/api/users/:id', async (req, res) => {
   }
 });
 
-
-// Existing GET APIs
 app.get('/api/users', async (req, res) => {
   try {
     const users = await User.find();
@@ -143,7 +129,33 @@ app.get('/api/headers', (req, res) => {
   res.json({ headers: req.headers });
 });
 
-// Start the server
+app.post('/api/posts', async (req, res) => {
+  try {
+    const { title, content, userId } = req.body;
+    if (!title || !userId) {
+      return res.status(400).json({ message: 'Title and userId are required' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const newPost = new Post({ title, content, user: userId });
+    const savedPost = await newPost.save();
+    res.status(201).json({ message: 'Post created successfully', post: savedPost });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create post', error });
+  }
+});
+
+app.get('/api/users/:id/posts', async (req, res) => {
+  try {
+    const posts = await Post.find({ user: req.params.id }).populate('user');
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching posts for user', error });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
