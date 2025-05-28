@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const User = require('./models/user');
+const Post = require('./models/post');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -126,6 +127,33 @@ app.get('/api/delay', (req, res) => {
 
 app.get('/api/headers', (req, res) => {
   res.json({ headers: req.headers });
+});
+
+app.post('/api/posts', async (req, res) => {
+  try {
+    const { title, content, userId } = req.body;
+    if (!title || !userId) {
+      return res.status(400).json({ message: 'Title and userId are required' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const newPost = new Post({ title, content, user: userId });
+    const savedPost = await newPost.save();
+    res.status(201).json({ message: 'Post created successfully', post: savedPost });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create post', error });
+  }
+});
+
+app.get('/api/users/:id/posts', async (req, res) => {
+  try {
+    const posts = await Post.find({ user: req.params.id }).populate('user');
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching posts for user', error });
+  }
 });
 
 app.listen(PORT, () => {
