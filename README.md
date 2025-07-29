@@ -116,5 +116,5 @@ Managing gym operations manually is inefficient and error-prone. This project au
 
 ---
 
-## Deployed link : https://drive.google.com/file/d/1XtaOPhatuGvvlRdmWDUqrBPEZJlaE70H/view?usp=sharing
+## Deployed link : https://688863a314ada13b6ed33d62--capstone234.netlify.app 
 
